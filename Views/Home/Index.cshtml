@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(
+        $.ajax({
+            url: "/Home/TasksList",
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    );
+
+    function sendTask(event) {
+        if (event.keyCode === 13) {
+            var text = document.getElementById('todoInput').value;
+            $.ajax({
+                url: "/Home/AddTask",
+                type: "POST",
+                data: {
+                    "name": text
+                },
+                success: function (result) {
+                    $("#tasksList").html(result)
+                    document.getElementById('todoInput').value = "";
+                }
+            })
+        }
+
+    }
+
+    function setCompletedStatus(id) {
+        $.ajax({
+            url: "/Home/SetComletedStatus",
+            type: "PUT",
+            data: {
+                "id": id
+            },
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    }
+
+    function filter(filter) {
+        $.ajax({
+            url: "/Home/TasksList",
+            data: {
+                filter: filter
+            },
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    }
+
+    function deleteTask(id) {
+        $.ajax({
+            url: "/Home/DeleteTask",
+            type: "POST",
+            data: {
+                "id": id
+            },
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    }
+
+    function deleteCompleted() {
+        $.ajax({
+            url: "/Home/DeleteCompleted",
+            type: "POST",
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    }
+
+    function comletedAll() {
+        $.ajax({
+            url: "/Home/CompletedAll",
+            type: "POST",
+            success: function (result) {
+                $("#tasksList").html(result)
+            }
+        })
+    }
+
+</script>
+
+
+<div class="text-center">
+    <h1 class="display-4">todos</h1>
+    <button onclick="comletedAll()" type="button" class="btn btn-secondary m-3">Complete all</button>
+    <input class="form-control" id="todoInput" onkeyup="sendTask(event)" type="text" placeholder="What needs to be done?">
+    <div id="tasksList" class="p-5"></div>
+</div>

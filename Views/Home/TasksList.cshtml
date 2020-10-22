@@ -1,0 +1,50 @@
+﻿@model TasksViewModel
+
+@foreach (var task in Model.Tasks)
+{
+<div class="alert alert-primary mr-0" role="alert">
+    @if (task.IsCompleted)
+    {
+        <input id="@task.Id" onclick="setCompletedStatus(@task.Id)" type="checkbox" checked /> 
+        @task.Name 
+        <i class="fas fa-times ml-5" onclick="deleteTask(@task.Id)"></i>
+    }
+    else
+    {
+        <input id="@task.Id" onclick="setCompletedStatus(@task.Id)" type="checkbox" /> 
+        @task.Name 
+        <i class="fas fa-times ml-5" onclick="deleteTask(@task.Id)"></i>
+    }
+</div>
+
+}
+
+<div class="btn-group mr-5" role="group" aria-label="Basic example">
+    @if (Model.Mode == "All")
+    {
+        <button onclick="filter('All')" type="button" class="btn btn-primary">All</button>
+    }
+    else
+    {
+        <button onclick="filter('All')" type="button" class="btn btn-secondary">All</button>
+    }
+    @if (Model.Mode == "Active")
+    {
+        <button onclick="filter('Active')" type="button" class="btn btn-primary">Active</button>
+    }
+    else
+    {
+        <button onclick="filter('Active')" type="button" class="btn btn-secondary">Active</button>
+    }
+    @if (Model.Mode == "Completed")
+    {
+        <button onclick="filter('Completed')" type="button" class="btn btn-primary">Completed</button>
+    }
+    else
+    {
+        <button onclick="filter('Completed')" type="button" class="btn btn-secondary">Completed</button>
+    }
+</div>
+
+<span>@Model.Tasks.Where(t=>!t.IsCompleted).Count() items left</span>
+<button onclick="deleteCompleted()" type="button" class="btn btn-dark ml-5">Clear completed</button>
